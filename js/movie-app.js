@@ -3,12 +3,14 @@ let options = {
   headers: {
     'Content-Type': 'application/json',
   }
-}
+};
+let movieData;
 const getMovies = () => {
 
-  let moviesReq = fetch("https://spotted-melodic-yew.glitch.me/movies", options)
+  let moviesReq = fetch("https://alkaline-aluminum-bulb.glitch.me/movies", options)
     .then(resp => resp.json())
     .then(function (movies) {
+      movieData = movies;
       let htmlStr = "";
       console.log(movies); //I prefer to write data with the function tbh.
       for (let movie of movies) {
@@ -31,36 +33,53 @@ const getMovies = () => {
 getMovies();
 
 // POST new movie
-let newMovie = {
-    "title": $('#newMovieTitle').innerText,
-    "author": $('#newMovieRating').innerText
-};
 
-let postNewMovie = {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(newMovie)
-};
 
 $('#newMovieButton').click(() => {
-    fetch("https://spotted-melodic-yew.glitch.me/movies")
-        .then(resp => resp.json())
-        .then(movies => {
-            for (let movie of movies) {
-                if (movie.title !== newMovie.title) {
-                    fetch("https://spotted-melodic-yew.glitch.me/movies", postNewMovie)
-                        .then(getMovies)
-                        .then(console.log(movies))
-                }else {
-                    alert("hey, that movie already exists!");
-                    break;
-                }
-            }
-        })
 
+  let newMovie = {
+    "title": $('#newMovieTitle').val(),
+    "rating": $('#newMovieRating').val(),
+
+  };
+  function testMovie(){
+    let result;
+
+  movieData.forEach(function(movieE,indexE){
+    if(movieE.title === newMovie.title){
+      // alert(`${newMovie.title} is already on the list.`)
+      result = false
+    }
+  });
+  return (result === undefined)
+  }
+  console.log(testMovie())
+
+    let postNewMovie = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newMovie)
+    };
+
+    fetch("https://alkaline-aluminum-bulb.glitch.me/movies")
+      .then(resp => resp.json())
+      .then(movies => {
+        // for (let movie of movies) {
+          if (testMovie()) {
+            fetch("https://alkaline-aluminum-bulb.glitch.me/movies",)
+              .then(getMovies)
+              .then(console.log(movies))
+          } else {
+            alert("hey, that movie already exists!");
+            // break;
+          }
+        // }
+      })
 })
+
+
 
 // DELETE movie / Be careful of what is deleted
 let deleteMovie = {

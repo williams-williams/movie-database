@@ -10,24 +10,40 @@
 <body class="container">
   <h1>Movie App</h1>
 
-  <div id="container" class="d-flex ">
+  <div id="container" class="d-flex mx-auto">
     <div class="spinner-border" role="status">
       <span class="sr-only">Loading...</span>
     </div>
   </div>
 
   <!--New movie Form-->
-  <div class="row">
-    <div class="col-6">
-      <input id="newMovieTitle" type="text" class="form-control" placeholder="Movie Title" aria-label="">
-    </div>
-    <div class="col-6">
-      <input id="newMovieRating" type="text" class="form-control" placeholder="Rating" aria-label="Last name">
-    </div>
-    <div class="col text-right">
-      <button id="newMovieButton" type="submit">Create!</button>
+
+
+<!--  -->
+  <div class="col mb-4 mx-auto">
+    <div class="card">
+      <!--            <img src="img/coffee-cups.jpeg" class="card-img-top" alt="...">-->
+      <div class="cardImg " id="cardImgSearch"></div>
+      <div class="card-body">
+        <h4 class="card-title" style="text-align: center">CARD TITLE</h4>
+        <p class="card-text">
+        <div class="row">
+          <div class="col-6">
+            <input id="newMovieTitle" type="text" class="form-control" placeholder="Movie Title" aria-label="">
+          </div>
+          <div class="col-6">
+            <input id="newMovieRating" type="text" class="form-control" placeholder="Rating" aria-label="Last name">
+          </div>
+          <div class="col text-right">
+            <button class ="btn btn-secondary" id="newMovieButton" type="submit">Create!</button>
+          </div>
+        </div>
+
+        </p>
+      </div>
     </div>
   </div>
+<!--  -->
 
   <!--Delete movie Form-->
   <div class="row">
