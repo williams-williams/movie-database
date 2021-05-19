@@ -35,3 +35,34 @@ const getMovies = () => {
     })
 }
 getMovies();
+
+let newMovie = {
+    "title": $('#newMovieTitle').innerText,
+    "author": $('#newMovieRating').innerText
+};
+
+let postNewMovie = {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(newMovie)
+};
+
+$('#newMovieButton').click(() => {
+    fetch("https://spotted-melodic-yew.glitch.me/movies", postNewMovie)
+        .then(resp => resp.json())
+        .then(movies => {
+            for (let movie of movies) {
+                if (movie.title !== newMovie.title) {
+                    fetch("https://spotted-melodic-yew.glitch.me/movies", postNewMovie)
+                        .then(getMovies)
+                        .then(console.log(movies))
+                }else {
+                    alert("hey, that movie already exists!");
+                    break;
+                }
+            }
+        })
+
+})
