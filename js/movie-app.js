@@ -4,6 +4,11 @@ let options = {
     'Content-Type': 'application/json',
   }
 };
+function editRating(ratingString){
+  // var ratingArray = ratingString.split("");
+  return ratingString[0]
+}
+
 let movieData;
 const getMovies = () => {
 
@@ -16,16 +21,17 @@ const getMovies = () => {
       for (let movie of movies) {
         htmlStr += `<div class="card" style="width: 18rem;">
     <img src="${movie.poster}" class="card-img-top" alt="...">
-    <button class="btn btn-danger testD" data-value="${movie.id.toString()}">Remove Movie</button>
+    <button class="btn btn-danger testD"data-value="${movie.id.toString()}">Remove Movie</button>
     <div class="card-body">
-      <h5 class="card-title">${movie.title}</h5>
-      <p class="card-text">${movie.plot}</p>
+      <h5 class="card-title editTitle" contenteditable="true" >${movie.title}</h5>
+      <p class="card-text editPlot" contenteditable="true">${movie.plot}</p>
     </div>
+    <button class="btn btn-info testE" data-value="${movie.id.toString()}">Edit Movie</button>
     <ul class="list-group list-group-flush">
 
-     <li class="list-group-item">${movie.rating} out of 5</li>
-     <li class="list-group-item">Release year: ${movie.year}</li>
-     <li class="list-group-item">Directed by: ${movie.director}</li>
+     <li class="list-group-item editRating"><span contenteditable="true">${movie.rating}</span> out of 5</li>
+     <li class="list-group-item editYear">Release year: <span contenteditable="true">${movie.year}</span></li>
+     <li class="list-group-item editDirector">Directed by: <span contenteditable="true">${movie.director}</span></li>
     </ul>
   </div>`
       }
@@ -49,6 +55,35 @@ const getMovies = () => {
   fetch(`https://alkaline-aluminum-bulb.glitch.me/movies/${idTag}`, deleteMovie)
     .then(getMovies)
       });
+    })
+    .then(function(){
+
+// EDIT movie / each change needs drop down options
+      $(".testE").click(function(){
+        // console.log("edit button click")
+        let editThis = {
+          "title": $(this).parent().children().children('.editTitle').text(),
+          "plot": $(this).parent().children().children('.editPlot').text(),
+          "rating": $(this).parent().children("ul").children('.editRating').children().text(),
+          "year": $(this).parent().children("ul").children('.editYear').children().text(),
+          "director": $(this).parent().children("ul").children('.editDirector').children().text(),
+        }
+        // console.log(editThis);
+
+        let editOptions = {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(editThis)
+        };
+
+        let editMovieinputVal = $(this).attr("data-value");
+
+        fetch(`https://alkaline-aluminum-bulb.glitch.me/movies/${editMovieinputVal}`, editOptions).then(getMovies);
+
+      });
+
     })
 }
 getMovies();
@@ -76,7 +111,7 @@ $('#newMovieButton').click(() => {
     return (result === undefined)
   }
 
-  console.log(testMovie())
+  // console.log(testMovie())
 
   let postNewMovie = {
     method: 'POST',
@@ -104,27 +139,28 @@ $('#newMovieButton').click(() => {
 
 
 
-// EDIT movie / each change needs drop down options
-$("#editMovieButton").click(function(){
-  let editThis = {
-    "title": $('#editTitle').val(),
-    "plot": $('#editPlot').val(),
-    "rating": $('#editRating').val(),
-    "year": $('#editYear').val(),
-    "director": $('#editDirector').val(),
-  }
-
-  let editOptions = {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(editThis)
-  };
-
-  let editMovieinputVal = $('#movie-id-edit').val();
-  fetch(`https://alkaline-aluminum-bulb.glitch.me/movies/${editMovieinputVal}`, editOptions).then(getMovies);
-
-});
+// // EDIT movie / each change needs drop down options
+// $("#editMovieButton").click(function(){
+//   let editThis = {
+//     "title": $('#editTitle').val(),
+//     "plot": $('#editPlot').val(),
+//     "rating": $('#editRating').val(),
+//     "year": $('#editYear').val(),
+//     "director": $('#editDirector').val(),
+//   }
+//
+//   let editOptions = {
+//     method: 'PATCH',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify(editThis)
+//   };
+//
+//   // let editMovieinputVal = $('#movie-id-edit').val();
+//
+//   fetch(`https://alkaline-aluminum-bulb.glitch.me/movies/${editMovieinputVal}`, editOptions).then(getMovies);
+//
+// });
 
 
