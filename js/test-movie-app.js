@@ -4,7 +4,8 @@ let options = {
     'Content-Type': 'application/json',
   }
 };
-function editRating(ratingString){
+
+function editRating(ratingString) {
   // var ratingArray = ratingString.split("");
   return ratingString[0]
 }
@@ -38,7 +39,7 @@ const getMovies = () => {
       $("#container").html(htmlStr);
 
     })
-    .then(function(){
+    .then(function () {
       //Delete event needs to be inside so it happens after the
       $(".testD").click(function () {
         console.log("button clicked");
@@ -51,15 +52,15 @@ const getMovies = () => {
           }
         };
 
-  let inputVal = $('#movie-id-delete').val();
-  fetch(`https://alkaline-aluminum-bulb.glitch.me/movies/${idTag}`, deleteMovie)
-    .then(getMovies)
+        let inputVal = $('#movie-id-delete').val();
+        fetch(`https://alkaline-aluminum-bulb.glitch.me/movies/${idTag}`, deleteMovie)
+          .then(getMovies)
       });
     })
-    .then(function(){
+    .then(function () {
 
 // EDIT movie / each change needs drop down options
-      $(".testE").click(function(){
+      $(".testE").click(function () {
         // console.log("edit button click")
         let editThis = {
           "title": $(this).parent().children().children('.editTitle').text(),
@@ -98,6 +99,7 @@ $('#newMovieButton').click(() => {
     "rating": $('#newMovieRating').val(),
 
   };
+  let OMDBData;
 
 
   function testMovie() {
@@ -113,32 +115,58 @@ $('#newMovieButton').click(() => {
   }
 
   // console.log(testMovie())
-
-  let postNewMovie = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(newMovie)
-  };
-  
-
-  fetch("https://alkaline-aluminum-bulb.glitch.me/movies")
+  let postNewMovie;
+  // let postNewMovie = {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body: JSON.stringify(newMovie)
+  // };
+  console.log(OMDBData);
+  fetch(`http://www.omdbapi.com/?t=${newMovie.title}&apikey=${OMDB_KEY}`)
     .then(resp => resp.json())
-    .then(movies => {
-      // for (let movie of movies) {
-      if (testMovie()) {
-        fetch("https://alkaline-aluminum-bulb.glitch.me/movies", postNewMovie)
-          .then(getMovies)
-          .then(console.log(movies))
-      } else {
-        alert("hey, that movie already exists!");
-        // break;
-      }
-      // }
-    })
-})
+    .then(newMovieData => {
+      console.log(newMovieData);
+      OMDBData = {
+        "title": newMovieData.Title,
+        "rating": $('#newMovieRating').val(),
+        "year": newMovieData.Year,
+        "director": newMovieData.Director,
+        "genre": newMovieData.Genre,
+        "actors": newMovieData.Actors,
+        "plot": newMovieData.Plot,
+        "poster": newMovieData.Poster
 
+      };
+
+    }).then(function () {
+
+
+    fetch("https://alkaline-aluminum-bulb.glitch.me/movies")
+      .then(resp => resp.json())
+      .then(movies => {
+
+        postNewMovie = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(OMDBData)
+        };
+        // for (let movie of movies) {
+        if (testMovie()) {
+          fetch("https://alkaline-aluminum-bulb.glitch.me/movies", postNewMovie)
+            .then(getMovies)
+            .then(console.log(movies))
+        } else {
+          alert("hey, that movie already exists!");
+          // break;
+        }
+        // }
+      })
+  })
+})
 
 
 // // EDIT movie / each change needs drop down options

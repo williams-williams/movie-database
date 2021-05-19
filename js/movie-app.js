@@ -89,6 +89,8 @@ const getMovies = () => {
 getMovies();
 
 // POST new movie
+//I made it so it can add all the new movie data automatically using the other API instructions below:
+
 
 
 $('#newMovieButton').click(() => {
@@ -98,6 +100,10 @@ $('#newMovieButton').click(() => {
     "rating": $('#newMovieRating').val(),
 
   };
+  //We define this here so we can use it later.
+  let OMDBData;
+
+
 
   function testMovie() {
     let result;
@@ -112,29 +118,61 @@ $('#newMovieButton').click(() => {
   }
 
   // console.log(testMovie())
+  //We don't want to define this yet either.
+  let postNewMovie;
+  // let postNewMovie = {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body: JSON.stringify(newMovie)
+  // };
 
-  let postNewMovie = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(newMovie)
-  };
-
-  fetch("https://alkaline-aluminum-bulb.glitch.me/movies")
+  console.log(OMDBData);
+  //The OMDB_KEY is ignored I will send you the key ASAP.
+  fetch(`http://www.omdbapi.com/?t=${newMovie.title}&apikey=${OMDB_KEY}`)
     .then(resp => resp.json())
-    .then(movies => {
-      // for (let movie of movies) {
-      if (testMovie()) {
-        fetch("https://alkaline-aluminum-bulb.glitch.me/movies", postNewMovie)
-          .then(getMovies)
-          .then(console.log(movies))
-      } else {
-        alert("hey, that movie already exists!");
-        // break;
-      }
-      // }
-    })
+    .then(newMovieData => {
+      console.log(newMovieData);
+      //We define the OMDBdata with the data from the other API
+      OMDBData = {
+        "title": newMovieData.Title,
+        "rating": $('#newMovieRating').val(),
+        "year": newMovieData.Year,
+        "director": newMovieData.Director,
+        "genre": newMovieData.Genre,
+        "actors": newMovieData.Actors,
+        "plot": newMovieData.Plot,
+        "poster": newMovieData.Poster
+
+      };
+
+    }).then(function () {
+
+
+    fetch("https://alkaline-aluminum-bulb.glitch.me/movies")
+      .then(resp => resp.json())
+      .then(movies => {
+
+        postNewMovie = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(OMDBData)
+        };
+        // for (let movie of movies) {
+        if (testMovie()) {
+          fetch("https://alkaline-aluminum-bulb.glitch.me/movies", postNewMovie)
+            .then(getMovies)
+            .then(console.log(movies))
+        } else {
+          alert("hey, that movie already exists!");
+          // break;
+        }
+        // }
+      })
+  })
 })
 
 
