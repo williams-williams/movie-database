@@ -21,24 +21,24 @@ const getMovies = () => {
       for (let movie of movies) {
 
 
-        htmlStr += `<div class="card display-card">
-
-    <img src="${movie.poster}" class="card-img-top" alt="...">
-    <button class="btn btn-danger testD"data-value="${movie.id.toString()}">Remove Movie</button>
-    
-    <div class="card-body body-card col-12">
-      <h5 class="card-title editTitle" contenteditable="true" >${movie.title}</h5>
-      <p class="card-text editPlot" contenteditable="true">${movie.plot}</p>
+        htmlStr += `
+<div class="cardBox">
+    <button class="btn btn-danger testD deleteButton" data-value="${movie.id.toString()}">Remove Movie</button>
+    <button class="editButton btn btn-info testE" data-value="${movie.id.toString()}">Save Changes</button>
+    <div class="leftSide">
+      <img src="${movie.poster}" class="image" alt="...">
+      <h5 class="title editTitle" contenteditable="true">${movie.title}</h5>
+      <div class="genre">${movie.genre}</div>
     </div>
-    <button class="btn btn-info testE" data-value="${movie.id.toString()}">Edit Movie</button>
-    
-    <ul class="list-group list-group-flush col-12">
-     <li class="list-group-item editRating"><span contenteditable="true">${movie.rating}</span> out of 5</li>
-     <li class="list-group-item editYear">Release year: <span contenteditable="true">${movie.year}</span></li>
-     <li class="list-group-item editDirector">Directed by: <span contenteditable="true">${movie.director}</span></li>
-    </ul>
-    
-  </div>`
+    <div class="content">
+      <div class="plot editPlot" contenteditable="true">${movie.plot}</div>
+      <div class="notPlot">
+        <div class="rating editRating"><span contenteditable="true">${movie.rating}</span> out of 5</div>
+        <div class="releaseYear editYear">Release year: <span contenteditable="true">${movie.year}</span></div>
+        <div class="directedBy editDirector">Directed by: <span contenteditable="true">${movie.director}</span></div>
+      </div>
+    </div>
+</div>`
       }
       $("#container").html(htmlStr);
 
