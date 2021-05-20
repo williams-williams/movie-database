@@ -20,7 +20,7 @@ const getMovies = () => {
 
         htmlStr += `
           <div class="cardBox">
-              <button class="btn btn-danger testD deleteButton" data-value="${movie.id.toString()}">Remove Movie</button>
+              <button class="btn btn-danger deleteButton" data-value="${movie.id.toString()}">Remove Movie</button>
               <button class="editButton btn btn-info saveChangesButton" data-value="${movie.id.toString()}">Save Changes</button>
               <div class="leftSide">
                 <img src="${movie.poster}" class="image" alt="...">
@@ -42,7 +42,7 @@ const getMovies = () => {
     })
     .then(function(){
       //Delete event needs to be inside so it happens after the
-      $(".testD").click(function () {
+      $(".deleteButton").click(function () {
         console.log("button clicked");
         var idTag = $(this).attr("data-value");
         console.log(idTag);
@@ -117,6 +117,9 @@ $('#newMovieButton').click(() => {
     });
     return (result === undefined)
   }
+  function validMovie() {
+    return OMDBData.title !== undefined
+  }
 
   //We don't want to define this yet either.
   let postNewMovie;
@@ -141,6 +144,8 @@ $('#newMovieButton').click(() => {
 
       };
 
+
+      console.log(validMovie())
     }).then(function () {
 
     //Posts movie to glitch movies
@@ -155,13 +160,19 @@ $('#newMovieButton').click(() => {
           },
           body: JSON.stringify(OMDBData)
         };
-        if (testMovie()) {
+
+        if (testMovie() && validMovie()) {
           fetch("https://alkaline-aluminum-bulb.glitch.me/movies", postNewMovie)
             .then(getMovies)
             .then(console.log(movies))
         } else {
-          alert("hey, that movie already exists!");
+          if (testMovie()) {
+            alert("oops! that doesn't seem to be a movie we have.");
+          }else if (validMovie()) {
+            alert("hey, that movie already exists!");
+          }
         }
+
       })
   })
 })
