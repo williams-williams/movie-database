@@ -95,6 +95,7 @@ getMovies();
 
 
 $('#newMovieButton').click(() => {
+  $("#newMovieButton").attr("disabled",true);
 
   let newMovie = {
     "title": $('#newMovieTitle').val(),
@@ -174,8 +175,11 @@ $('#newMovieButton').click(() => {
         }
 
       })
-  })
+  }).then(function(){
+    $("#newMovieButton").attr("disabled",false)
 })
+})
+
 
 
 
