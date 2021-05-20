@@ -19,20 +19,25 @@ const getMovies = () => {
       let htmlStr = "";
       console.log(movies); //I prefer to write data with the function tbh.
       for (let movie of movies) {
-        htmlStr += `<div class="card" style="width: 18rem;">
+
+
+        htmlStr += `<div class="card display-card">
+
     <img src="${movie.poster}" class="card-img-top" alt="...">
     <button class="btn btn-danger testD"data-value="${movie.id.toString()}">Remove Movie</button>
-    <div class="card-body">
+    
+    <div class="card-body body-card col-12">
       <h5 class="card-title editTitle" contenteditable="true" >${movie.title}</h5>
       <p class="card-text editPlot" contenteditable="true">${movie.plot}</p>
     </div>
     <button class="btn btn-info testE" data-value="${movie.id.toString()}">Edit Movie</button>
-    <ul class="list-group list-group-flush">
-
+    
+    <ul class="list-group list-group-flush col-12">
      <li class="list-group-item editRating"><span contenteditable="true">${movie.rating}</span> out of 5</li>
      <li class="list-group-item editYear">Release year: <span contenteditable="true">${movie.year}</span></li>
      <li class="list-group-item editDirector">Directed by: <span contenteditable="true">${movie.director}</span></li>
     </ul>
+    
   </div>`
       }
       $("#container").html(htmlStr);
@@ -117,16 +122,9 @@ $('#newMovieButton').click(() => {
     return (result === undefined)
   }
 
-  // console.log(testMovie())
   //We don't want to define this yet either.
   let postNewMovie;
-  // let postNewMovie = {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify(newMovie)
-  // };
+
 
   console.log(OMDBData);
   //The OMDB_KEY is ignored I will send you the key ASAP.
@@ -149,7 +147,7 @@ $('#newMovieButton').click(() => {
 
     }).then(function () {
 
-
+    //Posts movie to glitch movies
     fetch("https://alkaline-aluminum-bulb.glitch.me/movies")
       .then(resp => resp.json())
       .then(movies => {
@@ -161,44 +159,17 @@ $('#newMovieButton').click(() => {
           },
           body: JSON.stringify(OMDBData)
         };
-        // for (let movie of movies) {
         if (testMovie()) {
           fetch("https://alkaline-aluminum-bulb.glitch.me/movies", postNewMovie)
             .then(getMovies)
             .then(console.log(movies))
         } else {
           alert("hey, that movie already exists!");
-          // break;
         }
-        // }
       })
   })
 })
 
 
-
-// // EDIT movie / each change needs drop down options
-// $("#editMovieButton").click(function(){
-//   let editThis = {
-//     "title": $('#editTitle').val(),
-//     "plot": $('#editPlot').val(),
-//     "rating": $('#editRating').val(),
-//     "year": $('#editYear').val(),
-//     "director": $('#editDirector').val(),
-//   }
-//
-//   let editOptions = {
-//     method: 'PATCH',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify(editThis)
-//   };
-//
-//   // let editMovieinputVal = $('#movie-id-edit').val();
-//
-//   fetch(`https://alkaline-aluminum-bulb.glitch.me/movies/${editMovieinputVal}`, editOptions).then(getMovies);
-//
-// });
 
 
