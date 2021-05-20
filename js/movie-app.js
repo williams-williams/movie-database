@@ -27,8 +27,8 @@ const getMovies = () => {
     <button class="editButton btn btn-info testE" data-value="${movie.id.toString()}">Save Changes</button>
     <div class="leftSide">
       <img src="${movie.poster}" class="image" alt="...">
-      <h5 class="title editTitle" contenteditable="true">${movie.title}</h5>
-      <div class="genre">${movie.genre}</div>
+      <h3 class="title editTitle" contenteditable="true">${movie.title}</h3>
+      <div class="genre editGenre">${movie.genre}</div>
     </div>
     <div class="content">
       <div class="plot editPlot" contenteditable="true">${movie.plot}</div>
@@ -67,11 +67,11 @@ const getMovies = () => {
       $(".testE").click(function(){
         // console.log("edit button click")
         let editThis = {
-          "title": $(this).parent().children().children('.editTitle').text(),
-          "plot": $(this).parent().children().children('.editPlot').text(),
-          "rating": $(this).parent().children("ul").children('.editRating').children().text(),
-          "year": $(this).parent().children("ul").children('.editYear').children().text(),
-          "director": $(this).parent().children("ul").children('.editDirector').children().text(),
+          "title": $(this).parent().children(".leftSide").children(".editTitle").text(),
+          "plot": $(this).parent().children(".content").children('.editPlot').text(),
+          "rating": $(this).parent().children(".content").children('.notPlot').children(".editRating").children().text(),
+          "year": $(this).parent().children(".content").children('.notPlot').children(".editYear").children().text(),
+          "director": $(this).parent().children(".content").children('.notPlot').children(".editDirector").children().text(),
         }
         // console.log(editThis);
 
@@ -84,7 +84,7 @@ const getMovies = () => {
         };
 
         let editMovieinputVal = $(this).attr("data-value");
-
+        console.log(editThis);
         fetch(`https://alkaline-aluminum-bulb.glitch.me/movies/${editMovieinputVal}`, editOptions).then(getMovies);
 
       });
