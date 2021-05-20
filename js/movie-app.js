@@ -4,10 +4,7 @@ let options = {
     'Content-Type': 'application/json',
   }
 };
-function editRating(ratingString){
-  // var ratingArray = ratingString.split("");
-  return ratingString[0]
-}
+
 
 let movieData;
 const getMovies = () => {
@@ -22,23 +19,23 @@ const getMovies = () => {
 
 
         htmlStr += `
-<div class="cardBox">
-    <button class="btn btn-danger testD deleteButton" data-value="${movie.id.toString()}">Remove Movie</button>
-    <button class="editButton btn btn-info testE" data-value="${movie.id.toString()}">Save Changes</button>
-    <div class="leftSide">
-      <img src="${movie.poster}" class="image" alt="...">
-      <h3 class="title editTitle" contenteditable="true">${movie.title}</h3>
-      <div class="genre editGenre">${movie.genre}</div>
-    </div>
-    <div class="content">
-      <div class="plot editPlot" contenteditable="true">${movie.plot}</div>
-      <div class="notPlot">
-        <div class="rating editRating"><span contenteditable="true">${movie.rating}</span> out of 5</div>
-        <div class="releaseYear editYear">Release year: <span contenteditable="true">${movie.year}</span></div>
-        <div class="directedBy editDirector">Directed by: <span contenteditable="true">${movie.director}</span></div>
-      </div>
-    </div>
-</div>`
+          <div class="cardBox">
+              <button class="btn btn-danger testD deleteButton" data-value="${movie.id.toString()}">Remove Movie</button>
+              <button class="editButton btn btn-info saveChangesButton" data-value="${movie.id.toString()}">Save Changes</button>
+              <div class="leftSide">
+                <img src="${movie.poster}" class="image" alt="...">
+                <h3 class="title editTitle" contenteditable="true">${movie.title}</h3>
+                <div class="genre editGenre">${movie.genre}</div>
+              </div>
+              <div class="content">
+                <div class="plot editPlot" contenteditable="true">${movie.plot}</div>
+                <div class="notPlot">
+                  <div class="rating editRating"><span contenteditable="true">${movie.rating}</span> out of 5</div>
+                  <div class="releaseYear editYear">Release year: <span contenteditable="true">${movie.year}</span></div>
+                  <div class="directedBy editDirector">Directed by: <span contenteditable="true">${movie.director}</span></div>
+                </div>
+              </div>
+          </div>`
       }
       $("#container").html(htmlStr);
 
@@ -56,7 +53,6 @@ const getMovies = () => {
           }
         };
 
-  let inputVal = $('#movie-id-delete').val();
   fetch(`https://alkaline-aluminum-bulb.glitch.me/movies/${idTag}`, deleteMovie)
     .then(getMovies)
       });
@@ -64,7 +60,7 @@ const getMovies = () => {
     .then(function(){
 
 // EDIT movie / each change needs drop down options
-      $(".testE").click(function(){
+      $(".saveChangesButton").click(function(){
         // console.log("edit button click")
         let editThis = {
           "title": $(this).parent().children(".leftSide").children(".editTitle").text(),
