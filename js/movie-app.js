@@ -9,7 +9,7 @@ let options = {
 let movieData;
 const getMovies = () => {
 
-  let moviesReq = fetch("https://alkaline-aluminum-bulb.glitch.me/movies", options)
+  fetch("https://alkaline-aluminum-bulb.glitch.me/movies", options)
     .then(resp => resp.json())
     .then(function (movies) {
       movieData = movies;
@@ -92,27 +92,23 @@ getMovies();
 // POST new movie
 //I made it so it can add all the new movie data automatically using the other API instructions below:
 
-
-
 $('#newMovieButton').click(() => {
   $("#newMovieButton").attr("disabled",true);
 
   let newMovie = {
     "title": $('#newMovieTitle').val(),
     "rating": $('#newMovieRating').val(),
-
   };
   //We define this here so we can use it later.
   let OMDBData;
 
 
-
+  //tests if movie is already added by checking for matching title
   function testMovie() {
     let result;
 
     movieData.forEach(function (movieE, indexE) {
       if (movieE.title === newMovie.title) {
-        // alert(`${newMovie.title} is already on the list.`)
         result = false
       }
     });
@@ -200,6 +196,8 @@ function capitalizeFirst(string) {
   return resultArray.join(" ");
 }
 
+//Filter by genre
+
 $("#filterGenreButton").click(() => {
   console.log("Button clicked");
   var genreFilter = capitalizeFirst($("#filterGenre").val());
@@ -237,13 +235,7 @@ $("#filterGenreButton").click(() => {
 
 });
 
-
-
-
 // Sort by rating
-
-
-
 
 $("#filterRatingButton").click(() => {
   console.log("Button clicked");
@@ -257,7 +249,6 @@ $("#filterRatingButton").click(() => {
 
   let htmlStr = "";
   for (let movie of filteredRatings) {
-
 
     htmlStr += `
           <div class="cardBox">
