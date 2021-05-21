@@ -237,7 +237,52 @@ $("#filterGenreButton").click(() => {
 
 });
 
-$("#reloadMoviesButton").click(function(){
+
+
+
+// Sort by rating
+
+
+
+
+$("#filterRatingButton").click(() => {
+  console.log("Button clicked");
+  var ratingFilter = $("#filterRating").val();
+  console.log(ratingFilter)
+
+  var filteredRatings = movieData.filter(function(movie){
+    return movie.rating.indexOf(ratingFilter) !== -1
+  });
+  console.log(filteredRatings);
+
+  let htmlStr = "";
+  for (let movie of filteredRatings) {
+
+
+    htmlStr += `
+          <div class="cardBox">
+              <button class="btn btn-danger deleteButton" data-value="${movie.id.toString()}">Remove Movie</button>
+              <button class="editButton btn btn-info saveChangesButton" data-value="${movie.id.toString()}">Save Changes</button>
+              <div class="leftSide">
+                <img src="${movie.poster}" class="image" alt="...">
+                <h3 class="title editTitle" contenteditable="true">${movie.title}</h3>
+                <div class="genre editGenre">${movie.genre}</div>
+              </div>
+              <div class="content">
+                <div class="plot editPlot" contenteditable="true">${movie.plot}</div>
+                <div class="notPlot">
+                  <div class="rating editRating"><span contenteditable="true">${movie.rating}</span> out of 5</div>
+                  <div class="releaseYear editYear">Release year: <span contenteditable="true">${movie.year}</span></div>
+                  <div class="directedBy editDirector">Directed by: <span contenteditable="true">${movie.director}</span></div>
+                </div>
+              </div>
+          </div>`
+  }
+  $("#container").html(htmlStr);
+
+});
+
+$("#reloadMoviesRatingButton").click(function(){
   getMovies();
 });
 
