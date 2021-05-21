@@ -183,4 +183,62 @@ $('#newMovieButton').click(() => {
 
 
 
+function capitalizeFirst(string) {
+
+  var stringArray = string.toLowerCase().split(" ");
+  var resultArray = [];
+  stringArray.forEach(function (element, index) {
+    var elementArray = element.split("");
+    // console.log(elementArray)
+    var firstLetter = elementArray[0].toUpperCase();
+    // console.log(firstLetter)
+    elementArray.splice(0, 1, firstLetter);
+    // console.log(elementArray)
+    element = elementArray.join("")
+    resultArray.push(element);
+  });
+  return resultArray.join(" ");
+}
+
+$("#filterGenreButton").click(() => {
+  console.log("Button clicked");
+  var genreFilter = capitalizeFirst($("#filterGenre").val());
+  console.log(genreFilter)
+
+  var filteredMovies = movieData.filter(function(movie){
+    return movie.genre.indexOf(genreFilter) !== -1
+  });
+  console.log(filteredMovies);
+
+  let htmlStr = "";
+  for (let movie of  filteredMovies) {
+
+
+    htmlStr += `
+          <div class="cardBox">
+              <button class="btn btn-danger deleteButton" data-value="${movie.id.toString()}">Remove Movie</button>
+              <button class="editButton btn btn-info saveChangesButton" data-value="${movie.id.toString()}">Save Changes</button>
+              <div class="leftSide">
+                <img src="${movie.poster}" class="image" alt="...">
+                <h3 class="title editTitle" contenteditable="true">${movie.title}</h3>
+                <div class="genre editGenre">${movie.genre}</div>
+              </div>
+              <div class="content">
+                <div class="plot editPlot" contenteditable="true">${movie.plot}</div>
+                <div class="notPlot">
+                  <div class="rating editRating"><span contenteditable="true">${movie.rating}</span> out of 5</div>
+                  <div class="releaseYear editYear">Release year: <span contenteditable="true">${movie.year}</span></div>
+                  <div class="directedBy editDirector">Directed by: <span contenteditable="true">${movie.director}</span></div>
+                </div>
+              </div>
+          </div>`
+  }
+  $("#container").html(htmlStr);
+
+});
+
+$("#reloadMoviesButton").click(function(){
+  getMovies();
+});
+
 

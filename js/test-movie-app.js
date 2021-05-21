@@ -5,10 +5,6 @@ let options = {
   }
 };
 
-function editRating(ratingString) {
-  // var ratingArray = ratingString.split("");
-  return ratingString[0]
-}
 
 let movieData;
 const getMovies = () => {
@@ -20,33 +16,33 @@ const getMovies = () => {
       let htmlStr = "";
       console.log(movies); //I prefer to write data with the function tbh.
       for (let movie of movies) {
-        // console.log(movie);
+
+
         htmlStr += `
-<div class="cardBox">
-    <button class="btn btn-danger testD deleteButton" data-value="${movie.id.toString()}">Remove Movie</button>
-    <button class="editButton btn btn-info testE" data-value="${movie.id.toString()}">Save Changes</button>
-    <div class="leftSide">
-      <img src="${movie.poster}" class="image" alt="...">
-      <h5 class="title editTitle" contenteditable="true">${movie.title}</h5>
-      <div class="genre">${movie.genre}</div>
-    </div>
-    <div class="content">
-      <div class="plot editPlot" contenteditable="true">${movie.plot}</div>
-      <div class="notPlot">
-        <div class="rating editRating"><span contenteditable="true">${movie.rating}</span> out of 5</div>
-        <div class="releaseYear editYear">Release year: <span contenteditable="true">${movie.year}</span></div>
-        <div class="directedBy editDirector">Directed by: <span contenteditable="true">${movie.director}</span></div>
-      </div>
-    </div>
-</div>`
+          <div class="cardBox">
+              <button class="btn btn-danger deleteButton" data-value="${movie.id.toString()}">Remove Movie</button>
+              <button class="editButton btn btn-info saveChangesButton" data-value="${movie.id.toString()}">Save Changes</button>
+              <div class="leftSide">
+                <img src="${movie.poster}" class="image" alt="...">
+                <h3 class="title editTitle" contenteditable="true">${movie.title}</h3>
+                <div class="genre editGenre">${movie.genre}</div>
+              </div>
+              <div class="content">
+                <div class="plot editPlot" contenteditable="true">${movie.plot}</div>
+                <div class="notPlot">
+                  <div class="rating editRating"><span contenteditable="true">${movie.rating}</span> out of 5</div>
+                  <div class="releaseYear editYear">Release year: <span contenteditable="true">${movie.year}</span></div>
+                  <div class="directedBy editDirector">Directed by: <span contenteditable="true">${movie.director}</span></div>
+                </div>
+              </div>
+          </div>`
       }
-      // console.log(htmlStr);
       $("#container").html(htmlStr);
 
     })
-    .then(function () {
+    .then(function(){
       //Delete event needs to be inside so it happens after the
-      $(".testD").click(function () {
+      $(".deleteButton").click(function () {
         console.log("button clicked");
         var idTag = $(this).attr("data-value");
         console.log(idTag);
@@ -57,22 +53,21 @@ const getMovies = () => {
           }
         };
 
-        let inputVal = $('#movie-id-delete').val();
-        fetch(`https://alkaline-aluminum-bulb.glitch.me/movies/${idTag}`, deleteMovie)
-          .then(getMovies)
+  fetch(`https://alkaline-aluminum-bulb.glitch.me/movies/${idTag}`, deleteMovie)
+    .then(getMovies)
       });
     })
-    .then(function () {
+    .then(function(){
 
 // EDIT movie / each change needs drop down options
-      $(".testE").click(function () {
+      $(".saveChangesButton").click(function(){
         // console.log("edit button click")
         let editThis = {
-          "title": $(this).parent().children().children('.editTitle').text(),
-          "plot": $(this).parent().children().children('.editPlot').text(),
-          "rating": $(this).parent().children("ul").children('.editRating').children().text(),
-          "year": $(this).parent().children("ul").children('.editYear').children().text(),
-          "director": $(this).parent().children("ul").children('.editDirector').children().text(),
+          "title": $(this).parent().children(".leftSide").children(".editTitle").text(),
+          "plot": $(this).parent().children(".content").children('.editPlot').text(),
+          "rating": $(this).parent().children(".content").children('.notPlot').children(".editRating").children().text(),
+          "year": $(this).parent().children(".content").children('.notPlot').children(".editYear").children().text(),
+          "director": $(this).parent().children(".content").children('.notPlot').children(".editDirector").children().text(),
         }
         // console.log(editThis);
 
@@ -85,7 +80,7 @@ const getMovies = () => {
         };
 
         let editMovieinputVal = $(this).attr("data-value");
-
+        console.log(editThis);
         fetch(`https://alkaline-aluminum-bulb.glitch.me/movies/${editMovieinputVal}`, editOptions).then(getMovies);
 
       });
@@ -95,16 +90,21 @@ const getMovies = () => {
 getMovies();
 
 // POST new movie
+//I made it so it can add all the new movie data automatically using the other API instructions below:
+
 
 
 $('#newMovieButton').click(() => {
+  $("#newMovieButton").attr("disabled",true);
 
   let newMovie = {
     "title": $('#newMovieTitle').val(),
     "rating": $('#newMovieRating').val(),
 
   };
+  //We define this here so we can use it later.
   let OMDBData;
+
 
 
   function testMovie() {
@@ -118,21 +118,21 @@ $('#newMovieButton').click(() => {
     });
     return (result === undefined)
   }
+  function validMovie() {
+    return OMDBData.title !== undefined
+  }
 
-  // console.log(testMovie())
+  //We don't want to define this yet either.
   let postNewMovie;
-  // let postNewMovie = {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify(newMovie)
-  // };
+
+
   console.log(OMDBData);
+  //The OMDB_KEY is ignored I will send you the key ASAP.
   fetch(`http://www.omdbapi.com/?t=${newMovie.title}&apikey=${OMDB_KEY}`)
     .then(resp => resp.json())
     .then(newMovieData => {
       console.log(newMovieData);
+      //We define the OMDBdata with the data from the other API
       OMDBData = {
         "title": newMovieData.Title,
         "rating": $('#newMovieRating').val(),
@@ -145,9 +145,11 @@ $('#newMovieButton').click(() => {
 
       };
 
+
+      console.log(validMovie())
     }).then(function () {
 
-
+    //Posts movie to glitch movies
     fetch("https://alkaline-aluminum-bulb.glitch.me/movies")
       .then(resp => resp.json())
       .then(movies => {
@@ -159,43 +161,84 @@ $('#newMovieButton').click(() => {
           },
           body: JSON.stringify(OMDBData)
         };
-        // for (let movie of movies) {
-        if (testMovie()) {
+
+        if (testMovie() && validMovie()) {
           fetch("https://alkaline-aluminum-bulb.glitch.me/movies", postNewMovie)
             .then(getMovies)
             .then(console.log(movies))
         } else {
-          alert("hey, that movie already exists!");
-          // break;
+          if (testMovie()) {
+            alert("oops! that doesn't seem to be a movie we have.");
+          }else if (validMovie()) {
+            alert("hey, that movie already exists!");
+          }
         }
-        // }
+
       })
-  })
+  }).then(function(){
+    $("#newMovieButton").attr("disabled",false)
+})
 })
 
 
-// // EDIT movie / each change needs drop down options
-// $("#editMovieButton").click(function(){
-//   let editThis = {
-//     "title": $('#editTitle').val(),
-//     "plot": $('#editPlot').val(),
-//     "rating": $('#editRating').val(),
-//     "year": $('#editYear').val(),
-//     "director": $('#editDirector').val(),
-//   }
-//
-//   let editOptions = {
-//     method: 'PATCH',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify(editThis)
-//   };
-//
-//   // let editMovieinputVal = $('#movie-id-edit').val();
-//
-//   fetch(`https://alkaline-aluminum-bulb.glitch.me/movies/${editMovieinputVal}`, editOptions).then(getMovies);
-//
-// });
+
+
+function capitalizeFirst(string) {
+
+  var stringArray = string.toLowerCase().split(" ");
+  var resultArray = [];
+  stringArray.forEach(function (element, index) {
+    var elementArray = element.split("");
+    // console.log(elementArray)
+    var firstLetter = elementArray[0].toUpperCase();
+    // console.log(firstLetter)
+    elementArray.splice(0, 1, firstLetter);
+    // console.log(elementArray)
+    element = elementArray.join("")
+    resultArray.push(element);
+  });
+  return resultArray.join(" ");
+}
+
+$("#filterGenreButton").click(() => {
+  console.log("Button clicked");
+  var genreFilter = capitalizeFirst($("#filterGenre").val());
+  console.log(genreFilter)
+
+  var filteredMovies = movieData.filter(function(movie){
+    return movie.genre.indexOf(genreFilter) !== -1
+  });
+  console.log(filteredMovies);
+
+  let htmlStr = "";
+  for (let movie of  filteredMovies) {
+
+
+    htmlStr += `
+          <div class="cardBox">
+              <button class="btn btn-danger deleteButton" data-value="${movie.id.toString()}">Remove Movie</button>
+              <button class="editButton btn btn-info saveChangesButton" data-value="${movie.id.toString()}">Save Changes</button>
+              <div class="leftSide">
+                <img src="${movie.poster}" class="image" alt="...">
+                <h3 class="title editTitle" contenteditable="true">${movie.title}</h3>
+                <div class="genre editGenre">${movie.genre}</div>
+              </div>
+              <div class="content">
+                <div class="plot editPlot" contenteditable="true">${movie.plot}</div>
+                <div class="notPlot">
+                  <div class="rating editRating"><span contenteditable="true">${movie.rating}</span> out of 5</div>
+                  <div class="releaseYear editYear">Release year: <span contenteditable="true">${movie.year}</span></div>
+                  <div class="directedBy editDirector">Directed by: <span contenteditable="true">${movie.director}</span></div>
+                </div>
+              </div>
+          </div>`
+  }
+  $("#container").html(htmlStr);
+
+});
+
+$("#reloadMoviesButton").click(function(){
+  getMovies();
+});
 
 
