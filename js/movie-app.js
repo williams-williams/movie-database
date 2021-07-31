@@ -9,7 +9,7 @@ let options = {
 let movieData;
 const getMovies = () => {
 
-  fetch("https://alkaline-aluminum-bulb.glitch.me/movies", options)
+  fetch("https://spotted-melodic-yew.glitch.me/movies", options)
     .then(resp => resp.json())
     .then(function (movies) {
       movieData = movies;
@@ -44,7 +44,7 @@ const getMovies = () => {
       //Delete event needs to be inside so it happens after the
       $(".deleteButton").click(function () {
         console.log("button clicked");
-        var idTag = $(this).attr("data-value");
+        let idTag = $(this).attr("data-value");
         console.log(idTag);
         let deleteMovie = {
           method: 'DELETE',
@@ -53,7 +53,7 @@ const getMovies = () => {
           }
         };
 
-  fetch(`https://alkaline-aluminum-bulb.glitch.me/movies/${idTag}`, deleteMovie)
+  fetch(`https://spotted-melodic-yew.glitch.me/movies/${idTag}`, deleteMovie)
     .then(getMovies)
       });
     })
@@ -81,7 +81,7 @@ const getMovies = () => {
 
         let editMovieinputVal = $(this).attr("data-value");
         console.log(editThis);
-        fetch(`https://alkaline-aluminum-bulb.glitch.me/movies/${editMovieinputVal}`, editOptions).then(getMovies);
+        fetch(`https://spotted-melodic-yew.glitch.me/movies/${editMovieinputVal}`, editOptions).then(getMovies);
 
       });
 
@@ -146,7 +146,7 @@ $('#newMovieButton').click(() => {
     }).then(function () {
 
     //Posts movie to glitch movies
-    fetch("https://alkaline-aluminum-bulb.glitch.me/movies")
+    fetch("https://spotted-melodic-yew.glitch.me/movies")
       .then(resp => resp.json())
       .then(movies => {
 
@@ -159,7 +159,7 @@ $('#newMovieButton').click(() => {
         };
 
         if (testMovie() && validMovie()) {
-          fetch("https://alkaline-aluminum-bulb.glitch.me/movies", postNewMovie)
+          fetch("https://spotted-melodic-yew.glitch.me/movies", postNewMovie)
             .then(getMovies)
             .then(console.log(movies))
         } else {
@@ -181,12 +181,12 @@ $('#newMovieButton').click(() => {
 
 function capitalizeFirst(string) {
 
-  var stringArray = string.toLowerCase().split(" ");
-  var resultArray = [];
+  let stringArray = string.toLowerCase().split(" ");
+  let resultArray = [];
   stringArray.forEach(function (element, index) {
-    var elementArray = element.split("");
+    let elementArray = element.split("");
     // console.log(elementArray)
-    var firstLetter = elementArray[0].toUpperCase();
+    let firstLetter = elementArray[0].toUpperCase();
     // console.log(firstLetter)
     elementArray.splice(0, 1, firstLetter);
     // console.log(elementArray)
@@ -196,14 +196,53 @@ function capitalizeFirst(string) {
   return resultArray.join(" ");
 }
 
+//Filter or search by name
+
+$("#filterSearchButton").click(() => {
+  console.log("Button clicked");
+  let genreFilter = capitalizeFirst($("#filterGenre").val());
+  console.log(genreFilter)
+
+  let filteredMovies = movieData.filter(function(movie){
+    return movie.genre.indexOf(genreFilter) !== -1
+  });
+  console.log(filteredMovies);
+
+  let htmlStr = "";
+  for (let movie of  filteredMovies) {
+
+
+    htmlStr += `
+          <div class="cardBox">
+              <button class="btn btn-danger deleteButton" data-value="${movie.id.toString()}">Remove Movie</button>
+              <button class="editButton btn btn-info saveChangesButton" data-value="${movie.id.toString()}">Save Changes</button>
+              <div class="leftSide">
+                <img src="${movie.poster}" class="image" alt="...">
+                <h3 class="title editTitle" contenteditable="true">${movie.title}</h3>
+                <div class="genre editGenre">${movie.genre}</div>
+              </div>
+              <div class="content">
+                <div class="plot editPlot" contenteditable="true">${movie.plot}</div>
+                <div class="notPlot">
+                  <div class="rating editRating"><span contenteditable="true">${movie.rating}</span> out of 5</div>
+                  <div class="releaseYear editYear">Release year: <span contenteditable="true">${movie.year}</span></div>
+                  <div class="directedBy editDirector">Directed by: <span contenteditable="true">${movie.director}</span></div>
+                </div>
+              </div>
+          </div>`
+  }
+  $("#container").html(htmlStr);
+
+});
+
 //Filter by genre
 
 $("#filterGenreButton").click(() => {
   console.log("Button clicked");
-  var genreFilter = capitalizeFirst($("#filterGenre").val());
+  let genreFilter = capitalizeFirst($("#filterGenre").val());
   console.log(genreFilter)
 
-  var filteredMovies = movieData.filter(function(movie){
+  let filteredMovies = movieData.filter(function(movie){
     return movie.genre.indexOf(genreFilter) !== -1
   });
   console.log(filteredMovies);
@@ -239,10 +278,10 @@ $("#filterGenreButton").click(() => {
 
 $("#filterRatingButton").click(() => {
   console.log("Button clicked");
-  var ratingFilter = $("#filterRating").val();
+  let ratingFilter = $("#filterRating").val();
   console.log(ratingFilter)
 
-  var filteredRatings = movieData.filter(function(movie){
+  let filteredRatings = movieData.filter(function(movie){
     return movie.rating.indexOf(ratingFilter) !== -1
   });
   console.log(filteredRatings);
