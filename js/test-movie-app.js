@@ -212,6 +212,7 @@ $("#filterGenreButton").click(() => {
 
   let htmlStr = "";
   for (let movie of  filteredMovies) {
+    let starAmount = makeStars(parseInt(movie.rating));
 
 
     htmlStr += `
@@ -226,7 +227,7 @@ $("#filterGenreButton").click(() => {
               <div class="content">
                 <div class="plot editPlot" contenteditable="true">${movie.plot}</div>
                 <div class="notPlot">
-                  <div class="rating editRating"><span contenteditable="true">${movie.rating}</span> out of 5</div>
+                  <div class="rating editRating"><span contenteditable="true">${starAmount}</span> out of 5</div>
                   <div class="releaseYear editYear">Release year: <span contenteditable="true">${movie.year}</span></div>
                   <div class="directedBy editDirector">Directed by: <span contenteditable="true">${movie.director}</span></div>
                 </div>
@@ -286,4 +287,19 @@ $("#reloadMoviesRatingButton").click(function(){
   getMovies();
 });
 
+function makeStars(stars){
+  let starCount = "";
+
+  for(let i = 1; i<=5; i++){
+    if(stars > i){
+      starCount += '<i className="far fa-star"></i>';
+      // starCount += 'o';
+    } else {
+      starCount += '<i className="fas fa-star"></i>';
+      // starCount += 'x';
+
+    }
+  }
+  return starCount;
+}
 

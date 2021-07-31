@@ -253,7 +253,7 @@ $("#filterGenreButton").click(() => {
 
   let htmlStr = "";
   for (let movie of  filteredMovies) {
-
+    let starAmount = makeStars(parseInt(movie.rating));
 
     htmlStr += `
           <div class="cardBox">
@@ -292,6 +292,7 @@ $("#filterRatingButton").click(() => {
 
   let htmlStr = "";
   for (let movie of filteredRatings) {
+    let starAmount = makeStars(parseInt(movie.rating));
 
     htmlStr += `
           <div class="cardBox">
@@ -319,6 +320,22 @@ $("#filterRatingButton").click(() => {
 $("#reloadMoviesRatingButton").click(function(){
   getMovies();
 });
+function makeStars(stars){
+  stars = parseInt(stars);
+  let starCount = '';
 
+  for(let i = 1; i<=5; i++){
+    if(stars > i){
+      starCount += '<i className=\"fas fa-star\"></i>';
+      // starCount += 'o';
+    } else {
+      starCount += '<i className=\"far fa-star\"></i>';
+
+      // starCount += 'x';
+
+    }
+  }
+  return starCount;
+}
 
 
