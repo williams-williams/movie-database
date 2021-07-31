@@ -200,11 +200,11 @@ function capitalizeFirst(string) {
 
 $("#filterSearchButton").click(() => {
   console.log("Button clicked");
-  let genreFilter = capitalizeFirst($("#filterGenre").val());
-  console.log(genreFilter)
+  let searchFilter = capitalizeFirst($("#filterSearch").val());
+  console.log(searchFilter)
 
   let filteredMovies = movieData.filter(function(movie){
-    return movie.genre.indexOf(genreFilter) !== -1
+    return movie.title.indexOf(searchFilter) !== -1
   });
   console.log(filteredMovies);
 
@@ -233,6 +233,10 @@ $("#filterSearchButton").click(() => {
   }
   $("#container").html(htmlStr);
 
+});
+
+$("#reloadMoviesSearchButton").click(function(){
+  getMovies();
 });
 
 //Filter by genre
@@ -315,5 +319,6 @@ $("#filterRatingButton").click(() => {
 $("#reloadMoviesRatingButton").click(function(){
   getMovies();
 });
+
 
 
